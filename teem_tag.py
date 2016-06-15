@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
-from tagger import *
+from core import tagger
 from pymongo import *
-from extras import build_dict_from_nltk
 import os, pickle, pymongo
 
 from bson.objectid import ObjectId 
@@ -16,7 +14,7 @@ if __name__ == '__main__':
         build_dict_from_nltk('data/nltkdict.pkl')
 
     weights = pickle.load(open('data/nltkdict.pkl'))
-    mytagger = Tagger(Reader(), Stemmer(), Rater(weights))
+    mytagger = tagger.Tagger(tagger.Reader(), tagger.Stemmer(), tagger.Rater(weights))
     
     # string = "The P2Pvalue project is mapping the diffusion and hybridization of peer production and investigating the conditions which favour collaborative creation and the logic of value of these emerging forms."
     # tags = mytagger(string, 5)
