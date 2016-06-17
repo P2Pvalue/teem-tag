@@ -1,0 +1,6 @@
+#NLP Packages
+nltk
+stemming
+
+#Python Driver for MongoDB
+pymongo
