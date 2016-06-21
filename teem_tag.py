@@ -25,7 +25,7 @@ if __name__ == '__main__':
     string = "The P2Pvalue project is mapping the diffusion and hybridization of peer production and investigating the conditions which favour collaborative creation and the logic of value of these emerging forms."
     tags = mytagger(string, 5)
 
-    print tags
+    # print tags
 
     client = MongoClient(db_host,int(db_port))
     collection = client.wiab.models
@@ -34,4 +34,6 @@ if __name__ == '__main__':
     key = "description"
 
     for doc in cursor:
-        print doc
+        root = doc['root']
+        if key in root:
+            print mytagger(root[key],5) 
