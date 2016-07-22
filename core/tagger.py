@@ -153,26 +153,26 @@ class Reader:
         if len(sentences) > 0:
             #stripping away punctuation
             words = nltk.pos_tag([word.lower() for word in nltk.wordpunct_tokenize(sentences[0]) if word not in punctuation])
-            # print words
+            
             if len(words) > 1:
-                tags.append(Tag(words[0][0]))
+                tags.append(Tag(str(words[0][0])))
                 for word, tag in words[1:-1]:
-                    tags.append(Tag(word, proper=proper_noun(tag)))
-                tags.append(Tag(words[-1][0],
-                                proper=proper_noun(words[-1][1]),
+                    tags.append(Tag(str(word), proper=proper_noun(tag)))
+                tags.append(Tag(str(words[-1][0]),
+                                proper=proper_noun(str(words[-1][1])),
                                 terminal=True))
             elif len(words) == 1:
-                tags.append(Tag(words[0][0], terminal=True))
+                tags.append(Tag(str(words[0][0]), terminal=True))
 
         #Rest of the sentences
         for sent in sentences[1:]:
             words = nltk.pos_tag([word.lower() for word in nltk.wordpunct_tokenize(sent) if word not in punctuation])
             if len(words) > 1:
                 for word,tag in words[:-1]:
-                    tags.append(Tag(word, proper=proper_noun(tag)))
+                    tags.append(Tag(str(word), proper=proper_noun(tag)))
             if len(words) > 0:
-                tags.append(Tag(words[-1][0],
-                                proper=proper_noun(words[-1][1]),
+                tags.append(Tag(str(words[-1][0]),
+                                proper=proper_noun(str(words[-1][1])),
                                 terminal=True))
         return tags
 
@@ -209,6 +209,8 @@ class Stemmer:
         '''
         string = self.preprocess(tag.string)
         tag.stem = self.stemmer.stem(string)
+
+
         return tag    
         
     def preprocess(self, string):
@@ -266,13 +268,6 @@ class Rater:
                 proper[t] += 1
                 ratings[t] = max(ratings[t], t.rating)
 
-        # print "\n"
-        # print "Clusters:"
-        # print clusters
-        # print "Proper:"
-        # print proper
-        # print "Ratings:"
-        # print ratings
         
         term_count = collections.Counter(multitags)
                 

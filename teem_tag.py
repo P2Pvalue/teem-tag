@@ -4,12 +4,14 @@
 from core import tagger
 from pymongo import *
 import os, pickle, pymongo
+import json
 
 from bson.objectid import ObjectId 
 
 #Configure database link
 db_host = os.environ.get('MONGO_PORT_27017_TCP_ADDR')
 db_port = os.environ.get('MONGO_PORT_27017_TCP_PORT')
+
 
 
 
@@ -22,13 +24,8 @@ if __name__ == '__main__':
     weights = pickle.load(open('data/nltkdict.pkl'))
     mytagger = tagger.Tagger(tagger.Reader(), tagger.Stemmer(), tagger.Rater(weights))
     
-    string = "The P2Pvalue project is mapping the diffusion and hybridization of peer production and investigating the conditions which favour collaborative creation and the logic of value of these emerging forms."
-    tags = mytagger(string, 5)
-
-    # print tags
-
-    client = MongoClient(db_host,int(db_port))
-    collection = client.wiab.models
+    client = MongoClient('172.17.0.2',27017)
+    collection = client.swellrt.models
     
     cursor = collection.find()
     key = "description"
@@ -36,4 +33,5 @@ if __name__ == '__main__':
     for doc in cursor:
         root = doc['root']
         if key in root:
-            print mytagger(root[key],5) 
+            data = {'waveid' : doc['wave_id'],  'waveletid' : doc['wavelet_id'], 'path' : 'xyz', 'data' : mytagger(root[key],10)}
+            print json.dumps(data, default=lambda x: str(x).strip('"\''))
