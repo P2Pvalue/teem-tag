@@ -4,3 +4,6 @@ stemming
 
 #Python Driver for MongoDB
 pymongo
+
+#Python Web-Server
+Flask
