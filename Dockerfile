@@ -4,15 +4,16 @@ MAINTAINER Prastut Kumar "kr.prastut@gmail.com"
 
 USER root
 
-ENV home /home
+RUN apt-get install -y git 
+RUN git clone https://github.com/P2Pvalue/teem-tag.git
 
-WORKDIR $home
+EXPOSE 5000
 
-ADD . $home/
-
+WORKDIR /teem-tag
 
 #Install all depedencies
 RUN pip install -r requirements.txt
+
 
 #Install remaining dependencies
 ENV CORPORA punkt

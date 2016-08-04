@@ -3,47 +3,33 @@
 
 from core import tagger
 from pymongo import *
-from flask import Flask
+from flask import Flask, request
 import os, pickle, pymongo
 import json
 
-
-from bson.objectid import ObjectId 
-
-#Configure database link
-db_host = os.environ.get('MONGO_PORT_27017_TCP_ADDR')
-db_port = os.environ.get('MONGO_PORT_27017_TCP_PORT')
-
+# Intialising Flask. It acts as webserver so that it catch any POST request that contains the text that one wants to tag 
 app = Flask(__name__)
 
-@app.route("/")
+#Listening on http://0.0.0.0:5000
+@app.route("/", methods=['GET', 'POST'])
 def tags():
-    string = "The P2Pvalue project is mapping the diffusion and hybridization of peer production and investigating the conditions which favour collaborative creation and the logic of value of these emerging forms."
-    data = { 'data' : mytagger(string,5)}
-    return json.dumps(data, default=lambda x: str(x).strip('"\''))
-    
+    if request.method == 'POST':
+        data = request.get_json()
+        tags = mytagger(data['data']['text'],10)
+        return json.dumps(tags, default=lambda x: str(x).strip('"\''))
+    else
+        return "Hello from Teem-tag"
 
 if __name__ == "__main__":
+
+    #Building dictionary from NLTK Corpus
     if not(os.path.isfile('data/nltkdict.pkl')):
         build_dict_from_nltk('data/nltkdict.pkl')
     
     weights = pickle.load(open('data/nltkdict.pkl'))
+
+    #Intialising mytagger object which tags the string
     mytagger = tagger.Tagger(tagger.Reader(), tagger.Stemmer(), tagger.Rater(weights))
-    
-    # client = MongoClient('172.17.0.2',27017)
-    # collection = client.swellrt.models
-    # for doc in cursor:
-    #     root = doc['root']
-    #     if key in root:
-    #         data = {'waveid' : doc['wave_id'],  'waveletid' : doc['wavelet_id'], 'path' : 'xyz', 'data' : mytagger(root[key],10)}
-    #         print json.dumps(data, default=lambda x: str(x).strip('"\''))
 
-    
-    # cursor = collection.find()
-    # key = "description"
-
+    #Webserver running in debug mode to show logs
     app.run(debug=True, host='0.0.0.0')
-
-
-
-    
