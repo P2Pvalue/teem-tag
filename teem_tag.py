@@ -4,21 +4,65 @@
 from core import tagger
 from pymongo import *
 from flask import Flask, request
-import os, pickle, pymongo
-import json
+from urlparse import urljoin
+import os, pickle, pymongo, json, requests
 
-# Intialising Flask. It acts as webserver so that it catch any POST request that contains the text that one wants to tag 
+# Initialising Flask. It acts as webserver so that it catch any POST request that contains the text that one wants to tag 
 app = Flask(__name__)
+swellrt = 'http://0.0.0.0:9898/swell/'
+
+session = False
 
 #Listening on http://0.0.0.0:5000
 @app.route("/", methods=['GET', 'POST'])
 def tags():
+
+    global session
+    
+    if not session:
+        session = authfromSwellRT()
+
     if request.method == 'POST':
         data = request.get_json()
-        tags = mytagger(data['data']['text'],10)
-        return json.dumps(tags, default=lambda x: str(x).strip('"\''))
-    else
-        return "Hello from Teem-tag"
+        print data
+        
+            #Initialisation
+        wave_id = data['waveid']
+        description = data['data']['text']
+
+        tags = json.dumps(mytagger(data['data']['text'],10), default=lambda x: str(x).strip('"\''))
+        hello = post2swellRT(session,wave_id,tags)
+        
+        #For logs
+        print tags
+        print "POST2SWELLRT"
+        print hello
+
+        return json.dumps(True)
+    else:
+        tags = json.dumps(mytagger("Hello from the other side",10), default=lambda x: str(x).strip('"\''))
+    
+        return tags
+
+
+
+def authfromSwellRT():
+    session = requests.session()
+    swellrt_auth_link = urljoin(swellrt,'auth')
+    session.post(swellrt_auth_link, json={"id":"teemtag@local.net","password":"teemtag"})
+    auth_test = session.get(swellrt_auth_link)
+    if auth_test.status_code == 200:
+        return session
+    else:
+        return False
+
+
+def post2swellRT(session,wave_id,tags):
+    update_link = swellrt + 'object/' +wave_id + '/tags'
+    print update_link
+    update = session.post(update_link, json=tags)
+    print update.content
+    return update
 
 if __name__ == "__main__":
 
