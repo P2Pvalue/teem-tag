@@ -24,9 +24,8 @@ def tags():
 
     if request.method == 'POST':
         data = request.get_json()
-        print data
         
-            #Initialisation
+        #Initialisation
         wave_id = data['waveid']
         description = data['data']['text']
 
@@ -35,13 +34,9 @@ def tags():
         
         #For logs
         print tags
-        print "POST2SWELLRT"
-        print hello
-
         return json.dumps(True)
     else:
-        tags = json.dumps(mytagger("Hello from the other side",10), default=lambda x: str(x).strip('"\''))
-    
+        tags = json.dumps(mytagger("Hello from Teem Tag",10), default=lambda x: str(x).strip('"\''))
         return tags
 
 
@@ -59,9 +54,7 @@ def authfromSwellRT():
 
 def post2swellRT(session,wave_id,tags):
     update_link = swellrt + 'object/' +wave_id + '/tags'
-    print update_link
     update = session.post(update_link, json=tags)
-    print update.content
     return update
 
 if __name__ == "__main__":

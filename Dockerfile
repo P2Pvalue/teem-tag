@@ -22,4 +22,4 @@ ENV AVGTAG averaged_perceptron_tagger
 RUN python -m nltk.downloader $CORPORA
 RUN python -m nltk.downloader $AVGTAG
 
-CMD ["python","teem_tag.py"]
+ENTRYPOINT ["./teem_tag.py"]
