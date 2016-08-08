@@ -7,3 +7,6 @@ pymongo
 
 #Python Web-Server
 Flask
+
+#For making POST and GET Requests
+requests
