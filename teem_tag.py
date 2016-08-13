@@ -5,7 +5,7 @@ from core import tagger
 from pymongo import *
 from flask import Flask, request
 from urlparse import urljoin
-import os, sys, pickle, pymongo, json, requests
+import os, sys, pickle, pymongo, json, requests, logging
 
 # Initialising Flask. Webserver to handle POST from SwellRT. 
 app = Flask(__name__)
@@ -14,31 +14,32 @@ swellrt = 'http://swellrt:9898/swell/'
 
 session = False
 
-# For authentication, defaults to username = teemtag, password
+# For authentication. Defaults to: username = teemtag@local.net, password = teemtag
 tag_user = os.environ.get('TEEMTAG_USERNAME')
 tag_pwd = os.environ.get('TEEMTAG_PASSWORD')
 
 @app.route("/", methods=['GET', 'POST'])
 def tags():
 
-    global session
     
 
     if request.method == 'POST':
+
+        global session
 
         if not session:
             session = authfromSwellRT()
 
         data = request.get_json()
         
-        #Initialisation
+        #Initialisation for context
         wave_id = data['waveid']
         description = data['data']['text']
 
         tags = json.dumps(mytagger(data['data']['text'],10), default=lambda x: str(x).strip('"\''))
        
         #For logs
-        print tags
+        app.logger.info(tags)
         
         post2swellRT(session,wave_id,tags)
         
@@ -56,36 +57,33 @@ def authfromSwellRT():
     try:
 
         if tag_user and tag_pwd:
-            session.post(swellrt_auth_link, json={"id": tag_user + "@local.net","password": tag_pwd})
+            session.post(swellrt_auth_link, json={"id": tag_user,"password": tag_pwd})
         else:
             session.post(swellrt_auth_link, json={"id":"teemtag@local.net","password":"teemtag"})
     except requests.exceptions.RequestException as e:    
-        print 'Authentication failed'
-        print e
-        sys.exit(1)
+        app.logger.error('Authentication failed from SwellRT')
 
     try:
         auth_test = session.get(swellrt_auth_link)
     except requests.exceptions.RequestException as e:    
-        print 'Authentication checking failed'
-        print e
-        sys.exit(1)
+        app.logger.error('Authentication checking failed')
     
     if auth_test.status_code == 200:
+        app.logger.info('Succesful Authentication')
         return session
     else:
-        print 'Cannot authenticate from SwellRT. Exiting!'
-        sys.exit(1)
+        app.logger.error('Cannot authenticate from SwellRT. Exiting!')
 
 
 def post2swellRT(session,wave_id,tags):
     #Making the Update Link
     update_link = swellrt + 'object/' + wave_id + '/tags'
+    
     try:
         update = session.post(update_link, json=tags)
     except requests.exceptions.RequestException as e:
-        print 'Updating to SwellRT failed'
-        print e
+        app.logger.info('Updating to SwellRT failed')
+
 
 if __name__ == "__main__":
 
