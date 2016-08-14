@@ -10,13 +10,21 @@ import os, sys, pickle, pymongo, json, requests, logging
 # Initialising Flask. Webserver to handle POST from SwellRT. 
 app = Flask(__name__)
 # SwellRT IP. Works only with docker-compose setup.
-swellrt = 'http://swellrt:9898/swell/'
+swellrt_host = os.environ.get('SWELLRT_HOST')
+
+if swellrt_host:
+    swellrt = 'http://' + swellrt_host +':9898/swell/'
+else:
+    swellrt = 'http://swellrt:9898/swell/'
 
 session = False
+
 
 # For authentication. Defaults to: username = teemtag@local.net, password = teemtag
 tag_user = os.environ.get('TEEMTAG_USERNAME')
 tag_pwd = os.environ.get('TEEMTAG_PASSWORD')
+
+
 
 @app.route("/", methods=['GET', 'POST'])
 def tags():
