@@ -1,11 +1,5 @@
-#teem-tag
-Module which interacts with the [Teem](https://teem.works/), a project under [P2PValue Project](https://p2pvalue.eu/). 
-
-Made with <3 for open-source. This module is part of the matchmaking proposal for which I got selected as a [Google Summer of Code Student](https://summerofcode.withgoogle.com/projects/#5751555160539136) in 2016, under the organization [Berkman Klein Center for Internet & Society](https://cyber.law.harvard.edu/). 
-
-Additional Links: 
-* [Matchmaking Proposal](https://docs.google.com/document/d/1DwtxhYupN_e8bX13vntU7csiP4hrbZq4MftBJGhE6v0/edit?usp=sharing) for GSoC.
-* [Pycon Delhi 2016 Slides](https://in.pycon.org/cfp/2016/proposals/building-an-automatic-keyphrase-extraction-system-using-nltk-in-python~e9g4b/)
+#SwellRT Contest Submission Module
+Module which interacts with SwellRT, a project under [P2PValue Project](https://p2pvalue.eu/). 
 
 ##Objective
 
@@ -16,6 +10,8 @@ This module heavily uses nltk package for most of it's inner working. It's build
 ![alt tag](https://cloud.githubusercontent.com/assets/10279686/17645910/ab396276-61d0-11e6-8553-2cf8984c5c96.png)
 
 ##Brief Explanation
+
+### tagger
 Extracting tags from a text document involves at least three steps: 
 * Splitting the document into words. (Reading)
 * Grouping together variants of the same word. (Stemming) 
@@ -30,3 +26,10 @@ The Stemmer tries to recognise the root of a word, in order to identify slightly
 ###Rater
 The Rater takes the list of words contained in the document, together with any additional information gathered at the previous stages, and returns a list of tags (i.e. words or small units of text) ordered by some idea of "relevance".
 It turns out that just working on the information contained in the document itself is not enough, because it says nothing about the frequency of a term in the language. For this reason, the module consists of analysing a corpus (i.e. a sample of documents written in the same language) to build a dictionary of known words. This is taken care by the build_dict() function. It is advised to build your own dictionaries, and the build_dict_from_nltk() function in the [build_dict.py](https://github.com/P2Pvalue/teem-tag/blob/master/core/build_dict.py) enables you to use the corpora included in NLTK.
+
+### Image Classification
+
+## Contributors
+
+* Fenil Patel
+* Prastut Kumar
