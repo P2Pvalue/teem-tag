@@ -2,34 +2,32 @@
 Module which interacts with SwellRT, a project under [P2PValue Project](https://p2pvalue.eu/). 
 
 ##Objective
+We are targeting how to improve SwellRT externally. Our idea is devised from the patterns we observed:
+* Since most consumers of SwellRT are normal people, mainly web developers who want to use these applications to reduce their work, so they necessarily won't have the money or the infrastructure or the skills to incorporate machine learning or image processing or natural language.
+* The above mentioned technologies and computer sciences are in a lot of demand. These emerging sciences have made new insights which were not possible 5 years back.
 
-Automatic analysis of the description of teams in Teem to get valid and important tokens. Currently new users have a lot of friction in finding communities of their interest. By analysing the data from the communities, we can generate a map of interests. These interests can therefore be grouped and the user can be onboarded more easily through the idea of having to select their interests and then being directed to relevant communities. Future goals of this module to become a full fletched module for ML + NLP tasks related to the project. 
+So there is this gap or friction between these 2 points. We are trying to create an ecosystem of apps that strengthen the resolve of SwellRT and make it a dominating technology in the field of BaaS. 
 
-##Architecture
-This module heavily uses nltk package for most of it's inner working. It's build on top of Flask to provide a webserver. The module integrates as a docker container with [SwellRT](http://swellrt.org/), the full-stack backend framework for Teem. Following is a schematic diagram for the same:
+## Usecases:
+* You want a image processing support. Use an app from the ML+NLP ecosytem of SwellRT. 
+* You want a data science library -> okay done, ping the similar API. Though our idea is very small,  this can become a huge opening for developers writing apps for SwellRT. As SwellRT talks about decentralizing, we take it in a very literal way: of decentralizing the skills only available to the privileged people and hand it over to the masses. 
+
+## Inspiration:
+This is how ownCloud became a giant force in open source community since it had a app driven approach. We both are a part of the organization and we felt that the value proposition of the product was okay, but the engagement model in terms of developers and the community using it was high. 
+
+## What have we done till now:
+We have built upon teem-tag module which Prastut had developed under the Google Summer of Code program. We have primarily added 2 new features for now:
+* NLP
+ * Text summarization.
+ * Text tagging.
+* Image processing through TensorFlow.
+
+
+## Architecture
+This module heavily uses nltk package for most of it's NLP tasks as well as Tensorflow for image processing and convulutional neural network support. It's build on top of Flask to provide a webserver. The module integrates as a docker container with [SwellRT](http://swellrt.org/), the full-stack backend framework for Teem. Following is a schematic diagram for the same:
 ![alt tag](https://cloud.githubusercontent.com/assets/10279686/17645910/ab396276-61d0-11e6-8553-2cf8984c5c96.png)
-
-##Brief Explanation
-
-### tagger
-Extracting tags from a text document involves at least three steps: 
-* Splitting the document into words. (Reading)
-* Grouping together variants of the same word. (Stemming) 
-* Ranking them according to their relevance. (Ranking)
-
-###Reader
-A Reader object accepts a input string (document), perform normalisation and noise filteringof the text (such as turning everything into lower case), analyse the structure of the phrases and punctuation, and return a list of words respecting the order in the text, with some additional information such as which ones look like proper nouns, or are at the end of a phrase. 
-
-###Stemmer
-The Stemmer tries to recognise the root of a word, in order to identify slightly different forms. This is already a quite complicated task, and it's clearly language-specific. The stem module in the NLTK package provides algorithms for many languages. Currently the module only supports English language and uses PorterStemmer as the default stemmer. 
-
-###Rater
-The Rater takes the list of words contained in the document, together with any additional information gathered at the previous stages, and returns a list of tags (i.e. words or small units of text) ordered by some idea of "relevance".
-It turns out that just working on the information contained in the document itself is not enough, because it says nothing about the frequency of a term in the language. For this reason, the module consists of analysing a corpus (i.e. a sample of documents written in the same language) to build a dictionary of known words. This is taken care by the build_dict() function. It is advised to build your own dictionaries, and the build_dict_from_nltk() function in the [build_dict.py](https://github.com/P2Pvalue/teem-tag/blob/master/core/build_dict.py) enables you to use the corpora included in NLTK.
-
-### Image Classification
 
 ## Contributors
 
-* Fenil Patel
-* Prastut Kumar
+* [Fenil Patel](https://github.com/patelfenil)
+* [Prastut Kumar](https://github.com/prastut/)
