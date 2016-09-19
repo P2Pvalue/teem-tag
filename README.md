@@ -17,10 +17,10 @@ This is how ownCloud became a giant force in open source community since it had 
 
 ## What have we done till now:
 We have built upon teem-tag module which Prastut had developed under the Google Summer of Code program. We have primarily added 2 new features for now:
-* NLP
- * Text summarization.
- * Text tagging.
-* Image processing through TensorFlow.
+* NLP (click on the links to view code)
+ * [Text summarization.](https://github.com/P2Pvalue/teem-tag/blob/swellrt-contest/teem_tag.py#L52-L55)
+ * [Text tagging.](https://github.com/P2Pvalue/teem-tag/blob/swellrt-contest/teem_tag.py#L49-L50)
+* [Image processing through TensorFlow.](https://github.com/P2Pvalue/teem-tag/blob/swellrt-contest/teem_tag.py#L79-L81)
 
 
 ## Architecture
