@@ -18,10 +18,10 @@ sudo usermod -aG docker <your_user>
 And then restart your computer.
 
 
-## Setup Environment:
+## Setup Environment
 
 
-### Work related with setting up teem.
+### Work related with setting up teem:
 
 *  Clone teem.
 
@@ -69,7 +69,7 @@ And then restart your computer.
     sudo npm install -g gulp
     ```
 
-### Work related with Docker.
+### Work related with Docker:
 
 We are using multi-container application for Docker. You also need to install [docker-compose](https://docs.docker.com/compose/install/). Pull the following images:
 
@@ -78,12 +78,10 @@ docker pull p2pvalue/swellrt:0.51.3-alpha
 docker pull mongo:latest
 docker pull p2pvalue/teemtag:v1.2
 ```
-Note: As far as we know, the [HTTP Event Dispatcher module](https://github.com/P2Pvalue/swellrt/blob/master/wave/doc/swellrt/Event-Dispatcher.md) of SwellRT is only inside `0.51.3-aplha` tag, that's why we asking you to pull this image.
+Note: As far as we know, the [HTTP Event Dispatcher module](https://github.com/P2Pvalue/swellrt/blob/master/wave/doc/swellrt/Event-Dispatcher.md) of SwellRT is only inside `0.51.3-aplha` tag, that's why we are asking you to pull this image.
   
   
-### Now getting to the exciting part.
-
-By now you must have setup all the dependencies related to this project. Please follow the next steps:
+### Setting up the multi-container architecture:
 
 * `cd` inside the cloned teem repository.
 
@@ -96,7 +94,25 @@ By now you must have setup all the dependencies related to this project. Please 
   gulp
   ```
   
-  * Notice the logs which shows these containers running. Since we need to modify these containers, fire up a new terminal and stop them: 
+  * Notice the logs which shows the containers built from the images we just pulled as running:
+    ```
+    [01:59:00] Server started http://0.0.0.0:8000
+    [01:59:00] LiveReload started on port 35729
+    [01:59:00] Container teem-swellrt-mongo exists
+    [01:59:00] Container teem-swellrt-mongo is stopped
+    [01:59:00] Container teem-swellrt-teemtag exists
+    [01:59:00] Container teem-swellrt-teemtag is stopped
+    [01:59:03] Starting teem-swellrt-mongo
+    [01:59:03] 
+    [01:59:03] Starting teem-swellrt-teemtag
+    [01:59:03] 
+    [01:59:03] Container teem-swellrt exists
+    [01:59:03] Container teem-swellrt is stopped
+    [01:59:07] Starting teem-swellrt
+
+    ```
+  
+  * Since we need to modify these containers, fire up a new terminal and stop them: 
     
     Note: Don't stop gulp, keep it running. 
     
@@ -139,7 +155,7 @@ By now you must have setup all the dependencies related to this project. Please 
     ```
     
     
-* Now fire up another terminal (sorry for the extremely exhausting setup). We need to copy some application files inside the SwellRT container inorder for the HTTP Dispatcher to work:
+* Now fire up another terminal. We need to copy some application files inside the SwellRT container inorder for the HTTP Dispatcher to work:
     
     ```
     docker ps
@@ -180,6 +196,6 @@ As far as we can hope and you get lucky, you will have setup everything related 
 
 * Now make any community and fill the name of the community and the description. When you notice closely inside the logs, the tags and the summary would be visible to you. 
 
-* The process is:
+## TLDR process is:
   * SwellRT using the `rules.event.config` and `application.conf` makes a POST request with `name` and `description` to `teem-tag` container as soon as the MAP_ENTRY_UPDATED flag gets high.
   * The `teem-tag` container recieves the POST request, finds the `name` and `description` from the JSON recieved from SwellRT and then processes it to generate the tags as well as the summary of the content. 
