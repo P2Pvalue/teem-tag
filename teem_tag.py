@@ -7,6 +7,10 @@ from pymongo import *
 from flask import Flask, request
 from urlparse import urljoin
 import os, sys, pickle, pymongo, json, requests, logging
+from flask.views import View
+from flask import Flask
+from flask import render_template, redirect
+from werkzeug import secure_filename
 
 # Initialising Flask. Webserver to handle POST from SwellRT. 
 app = Flask(__name__)
@@ -24,8 +28,6 @@ session = False
 # For authentication. Defaults to: username = teemtag@local.net, password = teemtag
 tag_user = os.environ.get('TEEMTAG_USERNAME')
 tag_pwd = os.environ.get('TEEMTAG_PASSWORD')
-
-
 
 @app.route("/", methods=['GET', 'POST'])
 def tags():
@@ -68,19 +70,20 @@ def tags():
         return tags
 
 
-@app.route("/image", methods=['GET', 'POST'])
-def classify_image(image):
-
-    if request.method == 'GET':
+@app.route("/image_classify", methods=['GET', 'POST'])
+def classify_image():
+     return render_template('image.html')
         
-        sys.path.append("/usr/local/lib/python2.7/dist-packages/tensorflow/models/image/imagenet")
-        import classify_image
+@app.route('/imageupload/', methods=['POST'])
+def imageupload():
+    image=request.form['path']
+    #image = "/home/fenil/Pictures/img1.jpg"
+    sys.path.append("tensorflow/models/image/imagenet")
+    import classify_image
 
-        classify_image.maybe_download_and_extract()
-        image_classification = classify_image.run_inference_on_image(image)
-        app.logger.info(image_classification)
-        return 'OK'
-        
+    image_classification = classify_image.run_inference_on_image(image)
+    #app.logger.info(image_classification)
+    return render_template('image.html', image_classification=image_classification,image=image)
 
 
 def authfromSwellRT():

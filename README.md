@@ -48,6 +48,25 @@ sudo easy_install --upgrade six
 export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-0.10.0-py2-none-any.whl
 sudo pip install --upgrade $TF_BINARY_URL
 ```
+#### Downloading inception for image classification
+
+python tensorflow/models/image/imagenet/classify_image.py
+
+####  Text tagging and summarization demo
+
+![alt text](screenshots/text.png "Input text for tagging and summarization.")
+
+![alt text](screenshots/text_summarizer.png "Output for above text. The first red rectangle contains the tags and the second one contains summary.")
+
+#### Image classification demo
+
+python teem_tag,py
+
+Now you can visit localhost:5000/image_classify for image classification module.
+
+![alt text](screenshots/input_image.png "Input image for image classification.")
+
+![alt text](screenshots/output_image.png "Image classification output for the input image.")
 
 ## Contributors
 
