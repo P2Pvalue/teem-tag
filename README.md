@@ -27,6 +27,28 @@ We have built upon teem-tag module which Prastut had developed under the Google 
 This module heavily uses nltk package for most of it's NLP tasks as well as Tensorflow for image processing and convulutional neural network support. It's build on top of Flask to provide a webserver. The module integrates as a docker container with [SwellRT](http://swellrt.org/), the full-stack backend framework for Teem. Following is a schematic diagram for the same:
 ![alt tag](https://cloud.githubusercontent.com/assets/10279686/17645910/ab396276-61d0-11e6-8553-2cf8984c5c96.png)
 
+## Project Setup
+
+#### Installing required dependencies
+
+```pip install -r /path/to/requirements.txt```
+
+#### Tensor flow setup
+
+##### Ubuntu:
+```
+sudo apt-get install python-pip python-dev
+export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/linux/cpu/tensorflow-0.10.0-cp27-none-linux_x86_64.whl
+sudo pip install --upgrade $TF_BINARY_URL
+```
+##### Mac OS X
+```
+sudo easy_install pip
+sudo easy_install --upgrade six
+export TF_BINARY_URL=https://storage.googleapis.com/tensorflow/mac/cpu/tensorflow-0.10.0-py2-none-any.whl
+sudo pip install --upgrade $TF_BINARY_URL
+```
+
 ## Contributors
 
 * [Fenil Patel](https://github.com/patelfenil)
