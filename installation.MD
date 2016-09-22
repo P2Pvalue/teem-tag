@@ -2,6 +2,8 @@
 
 Since Prastut was working on Teem and with the help of Pablo we were able to integrate the teem-tag environment with SwellRT, so this module builds upon the same workflow. 
 
+Setting up this module requires previous knowledge of teem, swellRT and docker. This README might not be as elaborative as it seems. We also apologise for the exhaustive setup: automation is in the pipeline. 
+
 ## Dependencies
 
 * Git to download the teem repository and teem-tag's repository.  
