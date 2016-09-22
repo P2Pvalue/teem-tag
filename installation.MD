@@ -137,23 +137,37 @@ Note: As far as we know, the [HTTP Event Dispatcher module](https://github.com/P
     ```
     pwd
     // /<path leading to team repo>/teem/
-    
+    ```
+    ```
     ls
     bower_components    config.js.sample  LICENSE       README.md  test
     bower.json          cordova           node_modules  src        www
     CODE_OF_CONDUCT.md  gulpfile.js       package.json  swellrt
-
+    ```
+    ```
     cd swellrt
-    
     ```
 * Fire multi-container application setup using `docker-compose`:
     ```
     pwd
     // /<path leading to team repo>/teem/swellrt
-    
+    ```
+    `docker-compose` uses a `docker-compose.yml` file for directions. Ensure it's there inside the folder:
+    ```
+    ls
+    application.conf  docker-compose.yml  event.rules.config  templates
+    ```
+    Fire it up!
+    ```
     docker-compose up
     ```
+    Some logs will be shown. Please follow them carefully to check if the SwellRT container hasn't stopped accidentally. In our experience it stops because it can't find MongoDB container. Try running `docker-compose up` with sudo. If you get the following log (almost at the end), you are good to go:
     
+    ```
+    swellrt_1  | 
+    swellrt_1  | 	Current version of Atmosphere 2.1.0 
+    swellrt_1  | 	Newest version of Atmosphere available 2.1.12
+    ```
     
 * Now fire up another terminal. We need to copy some application files inside the SwellRT container inorder for the HTTP Dispatcher to work:
     
