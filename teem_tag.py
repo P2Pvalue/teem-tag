@@ -11,6 +11,7 @@ from flask.views import View
 from flask import Flask
 from flask import render_template, redirect
 from werkzeug import secure_filename
+from subprocess import Popen,PIPE
 
 # Initialising Flask. Webserver to handle POST from SwellRT. 
 app = Flask(__name__)
@@ -78,10 +79,10 @@ def classify_image():
 def imageupload():
     image=request.form['path']
     #image = "/home/fenil/Pictures/img1.jpg"
-    sys.path.append("tensorflow/models/image/imagenet")
+    sys.path.append("/usr/local/lib/python2.7/site-packages/tensorflow/models/image/imagenet")
     import classify_image
-
-    image_classification = classify_image.run_inference_on_image(image)
+    proc = Popen(['python','/usr/local/lib/python2.7/site-packages/tensorflow/models/image/imagenet/classify_image.py','--image_file',image],stdout=PIPE, stderr=PIPE)
+    image_classification, err = proc.communicate()
     #app.logger.info(image_classification)
     return render_template('image.html', image_classification=image_classification,image=image)
 
