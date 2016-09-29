@@ -1,0 +1,14 @@
+<html>
+<head>
+<title>Image classification</title>
+</head>
+<body>
+<form method="post" action="{{ url_for('imageupload') }}" enctype = "multipart/form-data">
+       <label for="yourname">Please enter absolute path of your image:</label>
+       <input type="text" name="path" value={{image}}><br />
+       <input type="submit" />
+</form>
+{{image_classification}}
+
+</body>
+</html>
