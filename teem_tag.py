@@ -2,10 +2,16 @@
 # -*- coding: utf-8 -*-
 
 from core import tagger
+from textteaser import TextTeaser
 from pymongo import *
 from flask import Flask, request
 from urlparse import urljoin
 import os, sys, pickle, pymongo, json, requests, logging
+from flask.views import View
+from flask import Flask
+from flask import render_template, redirect
+from werkzeug import secure_filename
+from subprocess import Popen,PIPE
 
 # Initialising Flask. Webserver to handle POST from SwellRT. 
 app = Flask(__name__)
@@ -24,8 +30,6 @@ session = False
 tag_user = os.environ.get('TEEMTAG_USERNAME')
 tag_pwd = os.environ.get('TEEMTAG_PASSWORD')
 
-
-
 @app.route("/", methods=['GET', 'POST'])
 def tags():
 
@@ -39,23 +43,48 @@ def tags():
             session = authfromSwellRT()
 
         data = request.get_json()
-        
+        app.logger.info(data)
         #Initialisation for context
         wave_id = data['waveid']
         description = data['data']['text']
+        name = data['data']['name']
 
+        #Generating tags
         tags = json.dumps(mytagger(data['data']['text'],10), default=lambda x: str(x).strip('"\''))
+
+        #Generating summary of 4 lines
+        tt = TextTeaser()
+        sentences = tt.summarize(name, description)
+        summary = json.dumps(sentences[:4])
+
+        
        
         #For logs
         app.logger.info(tags)
+        app.logger.info(summary);
         
-        post2swellRT(session,wave_id,tags)
+        post2swellRT(session,wave_id,tags,summary)
         
         return json.dumps(True)
     else:
         tags = json.dumps("Hello from Teem Tag",10, default=lambda x: str(x).strip('"\''))
         return tags
 
+
+@app.route("/image_classify", methods=['GET', 'POST'])
+def classify_image():
+     return render_template('image.html')
+        
+@app.route('/imageupload/', methods=['POST'])
+def imageupload():
+    image=request.form['path']
+    #image = "/home/fenil/Pictures/img1.jpg"
+    sys.path.append("/usr/local/lib/python2.7/site-packages/tensorflow/models/image/imagenet")
+    import classify_image
+    proc = Popen(['python','/usr/local/lib/python2.7/site-packages/tensorflow/models/image/imagenet/classify_image.py','--image_file',image],stdout=PIPE, stderr=PIPE)
+    image_classification, err = proc.communicate()
+    #app.logger.info(image_classification)
+    return render_template('image.html', image_classification=image_classification,image=image)
 
 
 def authfromSwellRT():
@@ -83,14 +112,22 @@ def authfromSwellRT():
         app.logger.error('Cannot authenticate from SwellRT. Exiting!')
 
 
-def post2swellRT(session,wave_id,tags):
-    #Making the Update Link
+def post2swellRT(session,wave_id,tags,summary):
+    #Making the Update Link for tags
     update_link = swellrt + 'object/' + wave_id + '/tags'
     
     try:
         update = session.post(update_link, json=tags)
     except requests.exceptions.RequestException as e:
-        app.logger.info('Updating to SwellRT failed')
+        app.logger.info('Updating tags to SwellRT failed')
+
+    #Making the Update Link for summary
+    summary_update_link = swellrt + 'object/' + wave_id + '/summary'
+    
+    try:
+        update = session.post(summary_update_link, json=summary)
+    except requests.exceptions.RequestException as e:
+        app.logger.info('Updating summary to SwellRT failed')
 
 
 if __name__ == "__main__":
